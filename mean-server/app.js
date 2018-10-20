@@ -20,7 +20,7 @@ mongoose
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use('/images', express.static('images'));
 routes(app);
 
 app.use('*', (req, res) =>

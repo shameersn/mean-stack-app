@@ -1,8 +1,12 @@
-mat-action-row{
-  button{
+mat-action-row {
+  button {
     margin-left: 10px;
   }
 }
 mat-spinner {
-  margin:auto;
+  margin: auto;
+}
+
+mat-paginator {
+  margin-top: 1rem;
 }

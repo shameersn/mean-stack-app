@@ -29,10 +29,22 @@ router
   .route('/')
   .get(async (req, res) => {
     try {
-      const posts = await Post.find();
+      let page = req.query.page ? +req.query.page : 1; // for no query params
+      let size = req.query.size ? +req.query.size : 2; // for no query params
+      page = page ? page : 1; // to avoid zero condition
+      size = size ? size : 2; // to avoid zero condition
+
+      const postQuery = Post.find()
+        .skip((page - 1) * size)
+        .limit(size);
+      const posts = await postQuery;
+      const postsCount = await Post.countDocuments();
       res.status(200).json({
         message: 'Posts listed successfully',
-        posts: posts
+        data: {
+          posts,
+          postsCount
+        }
       });
     } catch (error) {
       res.status(400).json({
@@ -41,10 +53,12 @@ router
       });
     }
   })
-  .post(multer(storage).single('image'), async (req, res) => {
+  .post(multer({ storage: storage }).single('image'), async (req, res) => {
+    const url = `${req.protocol}://${req.get('host')}`;
     const post = new Post({
       title: req.body.title,
-      content: req.body.content
+      content: req.body.content,
+      imagePath: `${url}/images/${req.file.filename}`
     });
     try {
       const result = await post.save();
@@ -60,25 +74,37 @@ router
     }
   });
 
-router.put('/:id', async (req, res) => {
-  const post = new Post({
-    _id: req.params.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  try {
-    const result = await Post.updateOne({ _id: req.params.id }, post);
-    res.status(200).json({
-      message: 'Post updated successfuly',
-      data: result
+router.put(
+  '/:id',
+  multer({ storage: storage }).single('image'),
+  async (req, res) => {
+    let imagePath = req.body.imagePath;
+
+    if (req.file) {
+      const url = `${req.protocol}://${req.get('host')}`;
+      imagePath = `${url}/images/${req.file.filename}`;
+    }
+    const post = new Post({
+      _id: req.params.id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: imagePath
     });
-  } catch (error) {
-    res.status(400).json({
-      message: 'Failed',
-      data: null
-    });
+
+    try {
+      const result = await Post.updateOne({ _id: req.params.id }, post);
+      res.status(200).json({
+        message: 'Post updated successfuly',
+        data: result
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: 'Failed',
+        data: null
+      });
+    }
   }
-});
+);
 
 router.delete('/:id', async (req, res) => {
   try {
