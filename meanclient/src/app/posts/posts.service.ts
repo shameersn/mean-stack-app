@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PostsService {
   private posts: Post[] = [];
   public onPostAdded: Subject<{ posts: Post[]; postsCount: number }> = new Subject();

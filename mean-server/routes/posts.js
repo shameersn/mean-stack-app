@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/Post');
 const multer = require('multer');
+
+const Post = require('../models/Post');
+const checkAuth = require('../middleware/check-auth');
 
 const MIME_TYPE_MAP = {
   'image/png': 'png',
@@ -53,7 +55,7 @@ router
       });
     }
   })
-  .post(multer({ storage: storage }).single('image'), async (req, res) => {
+  .post(checkAuth, multer({ storage: storage }).single('image'), async (req, res) => {
     const url = `${req.protocol}://${req.get('host')}`;
     const post = new Post({
       title: req.body.title,
@@ -76,6 +78,7 @@ router
 
 router.put(
   '/:id',
+  checkAuth,
   multer({ storage: storage }).single('image'),
   async (req, res) => {
     let imagePath = req.body.imagePath;
@@ -106,7 +109,7 @@ router.put(
   }
 );
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkAuth, async (req, res) => {
   try {
     const result = await Post.deleteOne({ _id: req.params.id });
     res.status(200).json({

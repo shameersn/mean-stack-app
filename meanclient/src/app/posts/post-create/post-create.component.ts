@@ -5,6 +5,7 @@ import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { MimeTypeValidator } from './mime-type.validator';
 
+
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
@@ -13,7 +14,7 @@ import { MimeTypeValidator } from './mime-type.validator';
 export class PostCreateComponent implements OnInit {
   constructor(
     private postService: PostsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {}
   private postId = '';
   private isEdit = false;
@@ -57,6 +58,7 @@ export class PostCreateComponent implements OnInit {
       }
     });
   }
+
 
   onAddPost() {
     if (this.postAddForm.invalid) {

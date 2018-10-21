@@ -11,7 +11,7 @@ const app = express();
 mongoose
   .connect(
     process.env.DB_CONNECTION,
-    { useNewUrlParser: true }
+    { useNewUrlParser: true, useCreateIndex: true }
   )
   .then(() => {
     console.log('Connected successfully');
