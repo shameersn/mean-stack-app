@@ -27,7 +27,6 @@ router.post('/signup', async (req, res) => {
       data: null
     });
   }
-
 });
 
 router.post('/login', async (req, res) => {
@@ -48,7 +47,8 @@ router.post('/login', async (req, res) => {
       message: 'User logined successfully',
       data: {
         token: token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userId: user._id
       }
     });
   } catch (error) {

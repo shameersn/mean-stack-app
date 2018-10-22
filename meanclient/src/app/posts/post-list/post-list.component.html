@@ -11,7 +11,7 @@
       <img [src]="post.imagePath" [alt]="post.title" mat-card-image>
     </mat-card>
     <p>{{post.content}}</p>
-    <mat-action-row *ngIf="isAuthenticated">
+    <mat-action-row *ngIf="isAuthenticated && (post.creator === userId)">
       <button mat-stroked-button color="primary" (click)="onEdit(post.id)">EDIT</button>
       <button mat-stroked-button color="warn" (click)="onDelete(post.id)">DELETE</button>
     </mat-action-row>

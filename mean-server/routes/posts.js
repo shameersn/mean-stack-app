@@ -60,7 +60,8 @@ router
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
-      imagePath: `${url}/images/${req.file.filename}`
+      imagePath: `${url}/images/${req.file.filename}`,
+      creator: req.user.id
     });
     try {
       const result = await post.save();
@@ -91,15 +92,24 @@ router.put(
       _id: req.params.id,
       title: req.body.title,
       content: req.body.content,
-      imagePath: imagePath
+      imagePath: imagePath,
+      creator: req.user.id
     });
 
     try {
-      const result = await Post.updateOne({ _id: req.params.id }, post);
-      res.status(200).json({
-        message: 'Post updated successfuly',
-        data: result
-      });
+      const result = await Post.updateOne({ _id: req.params.id, creator: req.user.id }, post);
+      if (result.n > 0) {
+        res.status(200).json({
+          message: 'Post updated successfuly',
+          data: result
+        });
+      } else {
+        res.status(401).json({
+          message: 'Un Authorized',
+          data: null
+        });
+      }
+
     } catch (error) {
       res.status(400).json({
         message: 'Failed',
@@ -111,11 +121,18 @@ router.put(
 
 router.delete('/:id', checkAuth, async (req, res) => {
   try {
-    const result = await Post.deleteOne({ _id: req.params.id });
-    res.status(200).json({
-      message: 'Post deleted successfuly',
-      data: result
-    });
+    const result = await Post.deleteOne({ _id: req.params.id, creator: req.user.id });
+    if (result.n > 0) {
+      res.status(200).json({
+        message: 'Post deleted successfuly',
+        data: result
+      });
+    } else {
+      res.status(401).json({
+        message: 'Un Authorized',
+        data: null
+      });
+    }
   } catch (error) {
     res.status(400).json({
       message: 'Failed',

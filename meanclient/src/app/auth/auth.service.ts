@@ -8,6 +8,7 @@ import { AuthData } from './auth-data.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private expiryTimer: any;
+  private userId: string;
   constructor(private http: HttpClient, private router: Router) {
   }
   private token: string;
@@ -24,17 +25,21 @@ export class AuthService {
         this.setToken(res.data.token);
         this.isAuthenticated = true;
         this.isUserAuthenticatedSubject.next(true);
-
+        this.userId = res.data.userId;
         const expiresIn = res.data.expiresIn ? Number(res.data.expiresIn) : null;
         if (expiresIn) {
           this.setExpiryTimer(expiresIn);
           const expiresInDate = new Date(new Date().getTime() + expiresIn * 1000);
-          this.saveAuthData(res.data.token, expiresInDate);
+          this.saveAuthData(res.data.token, expiresInDate, this.userId);
         }
 
         this.router.navigate(['/']);
       }
     });
+  }
+
+  getUserId() {
+    return this.userId;
   }
 
   private setExpiryTimer(expiresIn: number) {
@@ -66,23 +71,27 @@ export class AuthService {
     if (this.expiryTimer) {
       clearTimeout(this.expiryTimer);
     }
+    this.userId = null;
     this.clearAuthData();
     this.router.navigate(['/']);
   }
 
-  private saveAuthData(token: string, expiresIn: Date) {
+  private saveAuthData(token: string, expiresIn: Date, userId: string) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiresIn', expiresIn.toISOString());
+    localStorage.setItem('userId', userId);
   }
 
   private clearAuthData() {
     localStorage.removeItem('token');
     localStorage.removeItem('expiresIn');
+    localStorage.removeItem('userId');
   }
 
   private getAuthData() {
     const token = localStorage.getItem('token');
     const expiresInDate = localStorage.getItem('expiresIn');
+    const userId = localStorage.getItem('userId');
 
     if (!token || !expiresInDate) {
       return;
@@ -90,7 +99,8 @@ export class AuthService {
 
     return {
       token,
-      expiresInDate
+      expiresInDate,
+      userId
     };
   }
 
@@ -102,7 +112,7 @@ export class AuthService {
       if (expiresIn > 0) {
         this.setExpiryTimer(expiresIn / 1000);
         this.isAuthenticated = true;
-
+        this.userId = authData.userId;
         this.isUserAuthenticatedSubject.next(true);
       }
     }

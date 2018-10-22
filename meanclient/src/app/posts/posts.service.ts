@@ -35,7 +35,8 @@ export class PostsService {
                 id: item._id,
                 title: item.title,
                 content: item.content,
-                imagePath: item.imagePath
+                imagePath: item.imagePath,
+                creator: item.creator
               };
             }),
             postsCount: resData.data.postsCount
@@ -77,7 +78,6 @@ export class PostsService {
       };
     }
     this.http.put(this.url + '/' + id, post).subscribe(res => {
-      console.log(res);
       this.router.navigate(['/']);
     });
   }
