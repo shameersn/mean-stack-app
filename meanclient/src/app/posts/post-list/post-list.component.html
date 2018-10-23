@@ -1,6 +1,6 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 
-<mat-accordion *ngIf="((posts.length > 0) && !isLoading); else noPosts">
+<mat-accordion *ngIf="(!isLoading && (posts.length > 0))">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -22,6 +22,6 @@
 </mat-paginator>
 
 
-<ng-template #noPosts>
-  <p>No post available</p>
-</ng-template>
+<div *ngIf="posts.length === 0 && !isLoading">
+  <p style="text-align: center;">No post available</p>
+</div>

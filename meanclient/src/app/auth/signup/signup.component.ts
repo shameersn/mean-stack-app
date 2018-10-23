@@ -34,12 +34,8 @@ export class SignupComponent implements OnInit {
     this.authService.createUser(authData)
       .subscribe(res => {
         this.isLoading = false;
-
-        console.log(res);
       }, err => {
         this.isLoading = false;
-        console.log(err);
-
       });
   }
 }

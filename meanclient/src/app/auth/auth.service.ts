@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { AuthData } from './auth-data.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -16,11 +17,11 @@ export class AuthService {
   private isAuthenticated = false;
 
   createUser(user: AuthData) {
-    return this.http.post('http://localhost:3000/user/signup', user);
+    return this.http.post(`${environment.apiUrl}user/signup`, user);
   }
 
   login(user: AuthData) {
-    this.http.post('http://localhost:3000/user/login', user).subscribe((res: any) => {
+    this.http.post(`${environment.apiUrl}user/login`, user).subscribe((res: any) => {
       if (res.data.token) {
         this.setToken(res.data.token);
         this.isAuthenticated = true;
@@ -35,6 +36,8 @@ export class AuthService {
 
         this.router.navigate(['/']);
       }
+    }, err => {
+      this.isUserAuthenticatedSubject.next(false);
     });
   }
 

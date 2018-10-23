@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Post } from '../posts.model';
 import { PostsService } from '../posts.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { MimeTypeValidator } from './mime-type.validator';
 
 
@@ -15,6 +15,7 @@ export class PostCreateComponent implements OnInit {
   constructor(
     private postService: PostsService,
     private activatedRoute: ActivatedRoute,
+    private router: Router
   ) {}
   private postId = '';
   private isEdit = false;
@@ -67,7 +68,6 @@ export class PostCreateComponent implements OnInit {
     const inputPost = {
       ...this.postAddForm.value
     };
-    this.postAddForm.reset();
     this.isLoading = true;
 
     if (this.isEdit) {
@@ -76,13 +76,25 @@ export class PostCreateComponent implements OnInit {
         inputPost.title,
         inputPost.content,
         inputPost.image
-      );
+      ).subscribe(res => {
+        this.postAddForm.reset();
+        this.router.navigate(['/']);
+      }, err => {
+        this.postAddForm.reset();
+        this.isLoading = false;
+      });
     } else {
       this.postService.addPost(
         inputPost.title,
         inputPost.content,
         inputPost.image
-      );
+      ).subscribe((res: any) => {
+        this.postAddForm.reset();
+        this.router.navigate(['/']);
+      }, err => {
+        this.postAddForm.reset();
+        this.isLoading = false;
+      });
     }
   }
 

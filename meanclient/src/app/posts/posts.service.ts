@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -11,7 +12,7 @@ export class PostsService {
   public onPostAdded: Subject<{ posts: Post[]; postsCount: number }> = new Subject();
 
   constructor(private http: HttpClient, private router: Router) {}
-  private url = 'http://localhost:3000/posts';
+  private url = `${environment.apiUrl}posts`;
 
   addPost(title: string, content: string, image: File) {
     const postData = new FormData();
@@ -19,9 +20,7 @@ export class PostsService {
     postData.append('content', content);
     postData.append('image', image, title);
 
-    this.http.post(this.url, postData).subscribe((res: any) => {
-      this.router.navigate(['/']);
-    });
+    return this.http.post(this.url, postData);
   }
 
   getPosts(queryParams) {
@@ -77,8 +76,6 @@ export class PostsService {
         imagePath
       };
     }
-    this.http.put(this.url + '/' + id, post).subscribe(res => {
-      this.router.navigate(['/']);
-    });
+    return this.http.put(this.url + '/' + id, post);
   }
 }
