@@ -8,12 +8,11 @@ const fileUpload = require('../middleware/file-upload');
 router
   .route('/')
   .get(PostController.getPosts)
-  .post(checkAuth, fileUpload, PostController.addPost);
+  .post(checkAuth, PostController.addPost);
 
 router.put(
   '/:id',
   checkAuth,
-  fileUpload,
   PostController.updatePost
 );
 

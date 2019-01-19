@@ -52,11 +52,13 @@ export class AuthService {
   }
 
   setToken(token: string) {
+    localStorage.setItem('token', token);
     this.token = token;
   }
 
   getToken(): string {
-    return this.token;
+    const token = localStorage.getItem('token') || this.token;
+    return token;
   }
 
   isUserAuthenticated() {

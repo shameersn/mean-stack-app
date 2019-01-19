@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "serve:dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +22,8 @@
     "multer": "^1.4.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+  },
+  "engines": {
+    "node": "10.6.0"
   }
 }

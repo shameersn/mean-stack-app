@@ -8,7 +8,8 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-card>
-      <img [src]="post.imagePath" [alt]="post.title" mat-card-image>
+      <!-- <img [src]="post.imagePath" [alt]="post.title" mat-card-image> -->
+      Image here
     </mat-card>
     <p>{{post.content}}</p>
     <mat-action-row *ngIf="isAuthenticated && (post.creator === userId)">

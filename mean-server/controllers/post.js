@@ -32,7 +32,7 @@ const getPosts = async (req, res) => {
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
-      imagePath: `${url}/images/${req.file.filename}`,
+      imagePath: `${url}/images`,
       creator: req.user.id
     });
     try {

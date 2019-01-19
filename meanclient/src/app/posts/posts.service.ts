@@ -15,11 +15,13 @@ export class PostsService {
   private url = `${environment.apiUrl}posts`;
 
   addPost(title: string, content: string, image: File) {
-    const postData = new FormData();
+   /*  const postData = new FormData();
     postData.append('title', title);
     postData.append('content', content);
-    postData.append('image', image, title);
-
+    postData.append('image', image, title); */
+    const postData = {
+      title, content, image
+    };
     return this.http.post(this.url, postData);
   }
 

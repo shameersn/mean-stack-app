@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthData } from '../auth-data.model';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({ templateUrl: './signup.component.html', styleUrls: ['./signup.component.scss'] })
 export class SignupComponent implements OnInit {
   isLoading = false;
   signupForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.signupForm = this
@@ -34,6 +35,7 @@ export class SignupComponent implements OnInit {
     this.authService.createUser(authData)
       .subscribe(res => {
         this.isLoading = false;
+        this.router.navigate(['/auth/login']);
       }, err => {
         this.isLoading = false;
       });

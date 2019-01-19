@@ -46,7 +46,7 @@ const login = async (req, res) => {
       message: 'User logined successfully',
       data: {
         token: token,
-        expiresIn: 3600,
+        expiresIn: 6000,
         userId: user._id
       }
     });

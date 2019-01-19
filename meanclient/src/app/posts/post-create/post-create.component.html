@@ -11,7 +11,7 @@
   </mat-form-field>
 
   <div class="file-picker-container">
-    <button type="button" (click)="fileInput.click()" mat-stroked-button>Pick an Image</button>
+    <!-- <button type="button" (click)="fileInput.click()" mat-stroked-button>Pick an Image</button> -->
     <input type="file" #fileInput (change)="onImageSelected($event)">
   </div>
   <div *ngIf="imagePreview && postAddForm.get('image').valid" class="img-preview-container">
@@ -19,5 +19,5 @@
   </div>
   <mat-divider></mat-divider>
   <hr>
-  <button type="submit" mat-raised-button color="warn">CREATE POST</button>
+  <button type="submit" mat-raised-button color="warn">{{ isEdit ? 'UPDATE' : 'CREATE'}} POST</button>
 </form>
